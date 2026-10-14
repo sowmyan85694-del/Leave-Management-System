@@ -1,0 +1,150 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f2f5fa;
+    color: #263247;
+}
+
+header {
+    background: #244a80;
+    color: white;
+    padding: 25px;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0 0 8px;
+}
+
+header p {
+    margin: 0;
+}
+
+main {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 18px;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    margin-bottom: 25px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px #00000012;
+}
+
+h2 {
+    color: #244a80;
+    margin-top: 0;
+}
+
+form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+label {
+    font-weight: bold;
+    align-self: end;
+}
+
+input, select, textarea {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #ccd3df;
+    border-radius: 6px;
+    font: inherit;
+}
+
+textarea {
+    resize: vertical;
+}
+
+form button {
+    grid-column: 1 / -1;
+}
+
+button {
+    border: none;
+    border-radius: 5px;
+    padding: 10px 13px;
+    margin: 3px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+form button {
+    background: #244a80;
+    padding: 13px;
+}
+
+.approve {
+    background: #218838;
+}
+
+.reject {
+    background: #d93646;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+th, td {
+    border-bottom: 1px solid #e2e7ef;
+    padding: 12px;
+    text-align: left;
+}
+
+th {
+    background: #eaf0fa;
+    color: #244a80;
+}
+
+.status {
+    font-weight: bold;
+}
+
+.pending {
+    color: #b77900;
+}
+
+.approved {
+    color: #218838;
+}
+
+.rejected {
+    color: #d93646;
+}
+
+#emptyMessage {
+    color: #697586;
+}
+
+@media (max-width: 600px) {
+    main {
+        padding: 0 10px;
+    }
+
+    .card {
+        padding: 15px;
+    }
+
+    form {
+        grid-template-columns: 1fr;
+    }
+
+    form button {
+        grid-column: auto;
+    }
+}

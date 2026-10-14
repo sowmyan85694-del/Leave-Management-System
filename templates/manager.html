@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Dashboard - Employee Leave Portal</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #334155;
+        }
+
+        header {
+            background: linear-gradient(120deg, #0878c9, #164e9b);
+            color: white;
+            text-align: center;
+            padding: 28px 15px;
+        }
+
+        header h1 {
+            margin: 0 0 8px;
+            font-size: 30px;
+        }
+
+        header p {
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1150px;
+            margin: 35px auto;
+            padding: 0 18px;
+        }
+
+        .card {
+            background: white;
+            padding: 28px;
+            border-radius: 12px;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+        }
+
+        h2 {
+            color: #1766a8;
+            margin-top: 0;
+        }
+
+        label {
+            display: block;
+            margin: 16px 0 7px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        button {
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            color: white;
+            margin: 3px;
+        }
+
+        .login-button {
+            background: #0878c9;
+            width: 100%;
+            margin-top: 22px;
+            padding: 14px;
+            font-size: 17px;
+        }
+
+        .approve {
+            background: #16803c;
+        }
+
+        .reject {
+            background: #dc3545;
+        }
+
+        .logout {
+            display: inline-block;
+            background: #e7f0fa;
+            color: #145da0;
+            padding: 10px 15px;
+            border-radius: 6px;
+            text-decoration: none;
+            margin-bottom: 18px;
+        }
+
+        .back {
+            color: #1766a8;
+            margin-left: 12px;
+        }
+
+        .error {
+            color: #c62828;
+            background: #ffebee;
+            padding: 12px;
+            border-radius: 6px;
+        }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 850px;
+        }
+
+        th, td {
+            padding: 13px;
+            border-bottom: 1px solid #e2e8f0;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        th {
+            background: #e6f0fa;
+            color: #145da0;
+        }
+
+        .status {
+            font-weight: bold;
+        }
+
+        .pending {
+            color: #b7791f;
+        }
+
+        .approved {
+            color: #16803c;
+        }
+
+        .rejected {
+            color: #dc3545;
+        }
+
+        .action-form {
+            display: inline-block;
+            margin: 2px;
+        }
+
+        @media (max-width: 600px) {
+            .card {
+                padding: 18px;
+            }
+
+            header h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Employee Leave Portal</h1>
+    <p>Manager Dashboard</p>
+</header>
+
+<main class="container">
+
+    {% if not logged_in %}
+
+    <section class="card" style="max-width: 520px; margin: 35px auto;">
+        <h2>Manager Login</h2>
+
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+
+        <form action="{{ url_for('manager') }}" method="POST">
+
+            <label for="username">Manager Username</label>
+            <input
+                type="text"
+                id="username"
+                name="username"
+                placeholder="Enter manager username"
+                required
+                autocomplete="username"
+            >
+
+            <label for="password">Password</label>
+            <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Enter password"
+                required
+                autocomplete="current-password"
+            >
+
+            <button type="submit" class="login-button">
+                Login
+            </button>
+
+        </form>
+    </section>
+
+    {% else %}
+
+    <section class="card">
+        <h2>Leave Applications</h2>
+
+        <p>
+            Review employee applications and update their status below.
+        </p>
+
+        <a class="logout" href="{{ url_for('logout') }}">
+            Logout
+        </a>
+
+        <a class="back" href="{{ url_for('home') }}">
+            Back to Employee Portal
+        </a>
+
+        {% if leaves %}
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Employee</th>
+                        <th>Leave Type</th>
+                        <th>From</th>
+                        <th>To</th>
+                        <th>Reason</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for leave in leaves %}
+                    <tr>
+                        <td>{{ leave['id'] }}</td>
+                        <td>{{ leave['name'] }}</td>
+                        <td>{{ leave['leave_type'] }}</td>
+                        <td>{{ leave['from_date'] }}</td>
+                        <td>{{ leave['to_date'] }}</td>
+                        <td>{{ leave['reason'] }}</td>
+
+                        <td>
+                            <span class="status
+                                {% if leave['status'] == 'Approved' %}
+                                    approved
+                                {% elif leave['status'] == 'Rejected' %}
+                                    rejected
+                                {% else %}
+                                    pending
+                                {% endif %}
+                            ">
+                                {{ leave['status'] }}
+                            </span>
+                        </td>
+
+                        <td>
+                            {% if leave['status'] == 'Pending' %}
+
+                            <form
+                                class="action-form"
+                                action="{{ url_for('update_leave') }}"
+                                method="POST"
+                            >
+                                <input
+                                    type="hidden"
+                                    name="leave_id"
+                                    value="{{ leave['id'] }}"
+                                >
+
+                                <input
+                                    type="hidden"
+                                    name="status"
+                                    value="Approved"
+                                >
+
+                                <button class="approve" type="submit">
+                                    Approve
+                                </button>
+                            </form>
+
+                            <form
+                                class="action-form"
+                                action="{{ url_for('update_leave') }}"
+                                method="POST"
+                            >
+                                <input
+                                    type="hidden"
+                                    name="leave_id"
+                                    value="{{ leave['id'] }}"
+                                >
+
+                                <input
+                                    type="hidden"
+                                    name="status"
+                                    value="Rejected"
+                                >
+
+                                <button class="reject" type="submit">
+                                    Reject
+                                </button>
+                            </form>
+
+                            {% else %}
+                                No action needed
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% else %}
+
+            <p>No leave applications yet.</p>
+
+        {% endif %}
+    </section>
+
+    {% endif %}
+
+</main>
+
+</body>
+</html>
